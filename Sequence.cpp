@@ -1,92 +1,64 @@
 //Project 3 Sequence - Sequence.cpp
 //Charlie Must
+//Dr. James Anderson
 //CS3100 Data Structures and Algroithms
 //Doubly Linked List
 
-#include "SequenceNode.h";
+#include "Sequence.h"
 #include <iostream>
 #include <string>
 #include <exception>
 
-class Sequence {
-    size_t numElts;
-    SequenceNode *head;
-    SequenceNode *tail;
-
-    explicit Sequence(size_t sz = 0) {
-    for (int i = 0; i < sz; i++) {
+Sequence::Sequence(size_t sz) : numElts(0), head(nullptr), tail(nullptr) {
+    for (size_t i = 0; i < sz; i++) {
         push_back("");
     }
 }
 
-
-
-Sequence::Sequence(const Sequence &s) {
-    numElts=0;
-    auto* current = new SequenceNode(s.head->item);
-    head = current;
-    while (current->next != nullptr) {
-       push_back(current->item);
-        current = current->next;
-        numElts++;
+Sequence::Sequence(const Sequence &s) : numElts(0), head(nullptr), tail(nullptr) {
+    if (!s.empty()) {
+        SequenceNode* current = s.head;
+        while (current != nullptr) {
+            push_back(current->item);
+            current = current->next;
+        }
     }
 }
-
-
-
 
 Sequence::~Sequence() {
     clear();
 }
 
-
-
-
 Sequence& Sequence::operator=(const Sequence& s) {
-    if (s.empty()) {
+    if (this != &s) {
         clear();
-    }
-    else {
-        auto current = new SequenceNode(s.head->item);
-        head = current;
-        for (int i = 1; i < s.numElts; i++) {
-            push_back(current->item);
-            current = current->next;
+        if (!s.empty()) {
+            SequenceNode* current = s.head;
+            while (current != nullptr) {
+                push_back(current->item);
+                current = current->next;
+            }
         }
-        current = tail;
-        numElts = s.numElts;
     }
-return *this;
+    return *this;
 }
 
-
-
-
-
-std::string& Sequence::operator[](size_t position) {
-    if (position < 0 || position >= this->size()) {
+std::string& Sequence::operator[](size_t position) const {
+    if (position >= this->size()) {
         throw std::exception();
     }
-    auto* current =  this->head;
+    SequenceNode* current = this->head;
     for (size_t i = 0; i < position; ++i) {
         current = current->next;
     }
     return current->item;
 }
 
-////This was exhausting, even when I wrote it down and mapped it out all the
-////prev and next and back and forths …whew! Counting it as a victory!
-
-
-
-
-void Sequence::push_back(std::string item){
-    auto* newNode = new SequenceNode(item);
+void Sequence::push_back(std::string item) {
+    SequenceNode* newNode = new SequenceNode(item);
     if (empty()) {
         head = tail = newNode;
-        numElts++;
-    }
-    else {
+    } else {
         tail->next = newNode;
         newNode->prev = tail;
         tail = newNode;
@@ -94,112 +66,137 @@ void Sequence::push_back(std::string item){
     numElts++;
 }
 
-
-
-
 void Sequence::pop_back() {
     if (empty()) {
         throw std::exception();
     }
-    else{
+    if (head == tail) {
+        delete head;
+        head = tail = nullptr;
+    } else {
+        SequenceNode* oldTail = tail;
         tail = tail->prev;
-        delete tail->next;
         tail->next = nullptr;
+        delete oldTail;
     }
+    numElts--;
 }
-
-
-
-
-
 
 void Sequence::insert(size_t position, std::string item) {
     if (position > size()) {
         throw std::exception();
     }
-    else {
-
-        SequenceNode* newNode = new SequenceNode(item);
-        SequenceNode* current = head;
-        for (int i = 0; i < position; i++) {
-            current = current->next;
-        }
-        newNode->next = current->next;
-        newNode->prev = current;
-        current->next = newNode;
-        numElts++;
+    
+    if (position == size()) {
+        push_back(item);
+        return;
     }
+    
+    if (position == 0) {
+        SequenceNode* newNode = new SequenceNode(item);
+        newNode->next = head;
+        if (head != nullptr) {
+            head->prev = newNode;
+        }
+        head = newNode;
+        if (tail == nullptr) {
+            tail = newNode;
+        }
+        numElts++;
+        return;
+    }
+    
+    SequenceNode* newNode = new SequenceNode(item);
+    SequenceNode* current = head;
+    for (size_t i = 0; i < position; i++) {
+        current = current->next;
+    }
+    
+    newNode->next = current;
+    newNode->prev = current->prev;
+    current->prev->next = newNode;
+    current->prev = newNode;
+    numElts++;
 }
 
-
-
-
-
-    std::string Sequence::front() const{
-        if (this->empty()) {
-            throw std::exception();
-            return "Error:Ln102-Sequence";
-        }
-        else return head->item;
+std::string Sequence::front() const {
+    if (this->empty()) {
+        throw std::exception();
     }
+    return head->item;
+}
 
-
-
-
-
-    std::string Sequence::back()const{
-        if (this->empty()) {
-            throw std::exception();
-            return "Error:Ln109-Sequence";
-        }
-        else return tail->item;
+std::string Sequence::back() const {
+    if (this->empty()) {
+        throw std::exception();
     }
+    return tail->item;
+}
 
+bool Sequence::empty() const {
+    return numElts == 0;
+}
 
+size_t Sequence::size() const {
+    return numElts;
+}
 
-
-    bool Sequence::empty() const{
-        return this->size() == 0;
-    }
-
-
-
-
-    size_t Sequence::size() const{
-        return numElts;
-    }
-
-
-
-
-    void Sequence::clear() {
+void Sequence::clear() {
     while (!empty()) {
         pop_back();
     }
-    numElts = 0;
 }
 
-
-
-
-    void Sequence::erase(size_t position){
-
+void Sequence::erase(size_t position) {
+    if (position >= size()) {
+        throw std::exception();
     }
-
-
-
-
-
-    void Sequence::erase(size_t position, size_t count) {
-
+    
+    if (position == size() - 1) {
+        pop_back();
+        return;
     }
-
-
-
-
-
-    friend std::ostream &operator<<(std::ostream &os, const Sequence &s) {
-        return os;
+    
+    if (position == 0) {
+        SequenceNode* oldHead = head;
+        head = head->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        } else {
+            tail = nullptr;
+        }
+        delete oldHead;
+        numElts--;
+        return;
     }
+    
+    SequenceNode* current = head;
+    for (size_t i = 0; i < position; i++) {
+        current = current->next;
+    }
+    
+    current->prev->next = current->next;
+    current->next->prev = current->prev;
+    delete current;
+    numElts--;
+}
 
-};
+void Sequence::erase(size_t position, size_t count) {
+    for (size_t i = 0; i < count && position < size(); i++) {
+        erase(position);
+    }
+}
+
+std::ostream &operator<<(std::ostream &os, const Sequence &s) {
+    os << "[";
+    SequenceNode* current = s.head;
+    while (current != nullptr) {
+        os << current->item;
+        current = current->next;
+        if (current != nullptr) {
+            os << ", ";
+        }
+    }
+    os << "]";
+    return os;
+}

@@ -17,7 +17,7 @@ public:
     Sequence(const Sequence &s);
     ~Sequence();
     Sequence &operator=(const Sequence &s);
-    std::string &operator[](size_t position);
+    std::string &operator[](size_t position) const;
     void push_back(std::string item);
     void pop_back();
     void insert(size_t position, std::string item);
