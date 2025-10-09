@@ -1,0 +1,8 @@
+//
+// Created by sunbu on 10/9/2025.
+//
+
+#ifndef SEQUENCE_SEQUENCENODE_H
+#define SEQUENCE_SEQUENCENODE_H
+
+#endif //SEQUENCE_SEQUENCENODE_H
