@@ -13,11 +13,14 @@ class Sequence {
     SequenceNode *head;
     SequenceNode *tail;
 
-Sequence::Sequence(size_t sz = 0) {
+    explicit Sequence(size_t sz = 0) {
     for (int i = 0; i < sz; i++) {
         push_back("");
     }
 }
+
+
+
 Sequence::Sequence(const Sequence &s) {
     numElts=0;
     auto* current = new SequenceNode(s.head->item);
@@ -29,25 +32,37 @@ Sequence::Sequence(const Sequence &s) {
     }
 }
 
+
+
+
 Sequence::~Sequence() {
     clear();
 }
+
+
+
+
 Sequence& Sequence::operator=(const Sequence& s) {
     if (s.empty()) {
         clear();
     }
     else {
-
-        SequenceNode* current = s.head;
-        head->next = current;
-        for (int i = 0; i < s.numElts; i++) {
-            SequenceNode* newNode = new SequenceNode(current->item);
-            newNode->next = current->next;
+        auto current = new SequenceNode(s.head->item);
+        head = current;
+        for (int i = 1; i < s.numElts; i++) {
+            push_back(current->item);
             current = current->next;
         }
+        current = tail;
+        numElts = s.numElts;
     }
-
+return *this;
 }
+
+
+
+
+
 std::string& Sequence::operator[](size_t position) {
     if (position < 0 || position >= this->size()) {
         throw std::exception();
@@ -62,24 +77,42 @@ std::string& Sequence::operator[](size_t position) {
 ////This was exhausting, even when I wrote it down and mapped it out all the
 ////prev and next and back and forths …whew! Counting it as a victory!
 
+
+
+
 void Sequence::push_back(std::string item){
     auto* newNode = new SequenceNode(item);
     if (empty()) {
         head = tail = newNode;
+        numElts++;
     }
     else {
         tail->next = newNode;
         newNode->prev = tail;
         tail = newNode;
     }
+    numElts++;
 }
+
+
+
+
 void Sequence::pop_back() {
-    if (!empty()) {
+    if (empty()) {
+        throw std::exception();
+    }
+    else{
         tail = tail->prev;
         delete tail->next;
         tail->next = nullptr;
     }
 }
+
+
+
+
+
+
 void Sequence::insert(size_t position, std::string item) {
     if (position > size()) {
         throw std::exception();
@@ -97,6 +130,11 @@ void Sequence::insert(size_t position, std::string item) {
         numElts++;
     }
 }
+
+
+
+
+
     std::string Sequence::front() const{
         if (this->empty()) {
             throw std::exception();
@@ -104,6 +142,11 @@ void Sequence::insert(size_t position, std::string item) {
         }
         else return head->item;
     }
+
+
+
+
+
     std::string Sequence::back()const{
         if (this->empty()) {
             throw std::exception();
@@ -111,12 +154,24 @@ void Sequence::insert(size_t position, std::string item) {
         }
         else return tail->item;
     }
+
+
+
+
     bool Sequence::empty() const{
         return this->size() == 0;
     }
+
+
+
+
     size_t Sequence::size() const{
         return numElts;
     }
+
+
+
+
     void Sequence::clear() {
     while (!empty()) {
         pop_back();
@@ -124,15 +179,27 @@ void Sequence::insert(size_t position, std::string item) {
     numElts = 0;
 }
 
+
+
+
     void Sequence::erase(size_t position){
 
     }
+
+
+
+
 
     void Sequence::erase(size_t position, size_t count) {
 
     }
 
+
+
+
+
     friend std::ostream &operator<<(std::ostream &os, const Sequence &s) {
         return os;
     }
+
 };
