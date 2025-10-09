@@ -1,9 +1,15 @@
+#ifndef PROJECT3_SEQUENCENODE_H
+#define PROJECT3_SEQUENCENODE_H
+#include <string>
+
 class SequenceNode {
 public:
     std::string item;
-    std::shared_ptr<SequenceNode> next;
-    std::weak_ptr<SequenceNode> prev;
+    SequenceNode* next;
+    SequenceNode* prev;
 
-    SequenceNode(const std::string &item) : item(item), next(nullptr), prev() {}
+    SequenceNode(std::string &item) : item(item), next(nullptr), prev(nullptr) {}
+
+    SequenceNode() : next(nullptr), prev(nullptr){};
 };
-
+#endif //PROJECT3_SEQUENCENODE_H

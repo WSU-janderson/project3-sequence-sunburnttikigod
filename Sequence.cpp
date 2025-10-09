@@ -3,13 +3,15 @@
 //CS3100 Data Structures and Algroithms
 //Doubly Linked List
 
-#include "Sequence.h"
+#include "SequenceNode.h";
 #include <iostream>
 #include <string>
 #include <exception>
-#include <cassert>
 
-#include "SequenceNode.h"
+class Sequence {
+    size_t numElts;
+    SequenceNode *head;
+    SequenceNode *tail;
 
 Sequence::Sequence(size_t sz = 0) {
     for (int i = 0; i < sz; i++) {
@@ -17,18 +19,20 @@ Sequence::Sequence(size_t sz = 0) {
     }
 }
 Sequence::Sequence(const Sequence &s) {
+    numElts=0;
     auto* current = new SequenceNode(s.head->item);
     head = current;
     while (current->next != nullptr) {
        push_back(current->item);
-        current = current->next.get();
+        current = current->next;
+        numElts++;
     }
 }
 
 Sequence::~Sequence() {
     clear();
 }
-Sequence &Sequence::operator=(const Sequence &s) {
+Sequence& Sequence::operator=(const Sequence& s) {
     if (s.empty()) {
         clear();
     }
@@ -37,28 +41,28 @@ Sequence &Sequence::operator=(const Sequence &s) {
         SequenceNode* current = s.head;
         head->next = current;
         for (int i = 0; i < s.numElts; i++) {
-            auto newNode = std::make_shared<SequenceNode>(item);
+            SequenceNode* newNode = new SequenceNode(current->item);
             newNode->next = current->next;
             current = current->next;
         }
     }
 
 }
-std::string& Sequence::operator[](size_t position) const {
+std::string& Sequence::operator[](size_t position) {
     if (position < 0 || position >= this->size()) {
         throw std::exception();
     }
     auto* current =  this->head;
     for (size_t i = 0; i < position; ++i) {
-        current = current->next.lock();
-    }
+        current = current->next;
     }
     return current->item;
 }
-////This was exhausting, even when i wrote it down and mapped it out all the
-////prev and next and back and forths ....whew! Counting it as a victory!
 
-void Sequence::push_back(std::string item) {
+////This was exhausting, even when I wrote it down and mapped it out all the
+////prev and next and back and forths …whew! Counting it as a victory!
+
+void Sequence::push_back(std::string item){
     auto* newNode = new SequenceNode(item);
     if (empty()) {
         head = tail = newNode;
@@ -77,11 +81,12 @@ void Sequence::pop_back() {
     }
 }
 void Sequence::insert(size_t position, std::string item) {
-auto newNode = std::make_shared<SequenceNode>(item);
-    if (empty()) {
-        clear();
+    if (position > size()) {
+        throw std::exception();
     }
     else {
+
+        SequenceNode* newNode = new SequenceNode(item);
         SequenceNode* current = head;
         for (int i = 0; i < position; i++) {
             current = current->next;
@@ -89,41 +94,45 @@ auto newNode = std::make_shared<SequenceNode>(item);
         newNode->next = current->next;
         newNode->prev = current;
         current->next = newNode;
-    }
-std::string Sequence::front(){
-    if (this->empty()) {
-throw std::exception();
-    }
-    else {
-        return head->item;
-    return ;
-}
-std::string Sequence::back(){
-    return tail;
-}
-bool Sequence::empty() const {
-    return size() == 0;
-}
-size_t Sequence::size() const {
-    return sz;
-}
-void Sequence::clear() {
-
-}
-void Sequence::erase(size_t position) {
-
-
-}
-void Sequence::erase(size_t position, size_t count) {
-
-}
-friend std::ostream &operator<<(std::ostream &os, const Sequence &s) {
-    return os;
-}
-Sequence::value_type& Sequence::operator[]( index_type position )
-{
-    if (position < 0 || position >= this->size()) {
-        throw std::exception();
+        numElts++;
     }
 }
-Sequence
+    std::string Sequence::front() const{
+        if (this->empty()) {
+            throw std::exception();
+            return "Error:Ln102-Sequence";
+        }
+        else return head->item;
+    }
+    std::string Sequence::back()const{
+        if (this->empty()) {
+            throw std::exception();
+            return "Error:Ln109-Sequence";
+        }
+        else return tail->item;
+    }
+    bool Sequence::empty() const{
+        return this->size() == 0;
+    }
+    size_t Sequence::size() const{
+        return numElts;
+    }
+    void Sequence::clear() {
+    while (!empty()) {
+        pop_back();
+    }
+    numElts = 0;
+}
+
+    void Sequence::erase(size_t position){
+
+    }
+
+    void Sequence::erase(size_t position, size_t count) {
+
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Sequence &s) {
+        return os;
+    }
+};
