@@ -3,6 +3,7 @@
 //Dr. James Anderson
 //CS3100 Data Structures and Algroithms
 //Doubly Linked List
+//A program for doubly linked node list
 
 #include "Sequence.h"
 #include <iostream>
