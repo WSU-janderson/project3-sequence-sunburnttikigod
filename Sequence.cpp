@@ -9,7 +9,7 @@
 #include <exception>
 #include <cassert>
 
-#include "img/SequenceNode.h"
+#include "SequenceNode.h"
 
 Sequence::Sequence(size_t sz = 0) {
     for (int i = 0; i < sz; i++) {
@@ -21,7 +21,7 @@ Sequence::Sequence(const Sequence &s) {
     head = current;
     while (current->next != nullptr) {
        push_back(current->item);
-        current = current->next;
+        current = current->next.get();
     }
 }
 
@@ -37,20 +37,21 @@ Sequence &Sequence::operator=(const Sequence &s) {
         SequenceNode* current = s.head;
         head->next = current;
         for (int i = 0; i < s.numElts; i++) {
-            SequenceNode* newNode = new SequenceNode(current->item);
+            auto newNode = std::make_shared<SequenceNode>(item);
             newNode->next = current->next;
             current = current->next;
         }
     }
 
 }
-std::string& Sequence::operator[](size_t position) {
+std::string& Sequence::operator[](size_t position) const {
     if (position < 0 || position >= this->size()) {
         throw std::exception();
     }
     auto* current =  this->head;
-    for (int i = 0; i < position-1; i++) {
-        current = current->next;
+    for (size_t i = 0; i < position; ++i) {
+        current = current->next.lock();
+    }
     }
     return current->item;
 }
@@ -76,21 +77,25 @@ void Sequence::pop_back() {
     }
 }
 void Sequence::insert(size_t position, std::string item) {
-    if (position > sz) {
-        throw std::exception();
+auto newNode = std::make_shared<SequenceNode>(item);
+    if (empty()) {
+        clear();
     }
-    SequenceNode* current = new SequenceNode(item);
-    for (int i = 0; i < position-1; i++) {
+    else {
+        SequenceNode* current = head;
+        for (int i = 0; i < position; i++) {
+            current = current->next;
+        }
+        newNode->next = current->next;
+        newNode->prev = current;
+        current->next = newNode;
     }
-    N->prev = A;
-        N->next = B;
-        B->prev = N;
-
-}
 std::string Sequence::front(){
     if (this->empty()) {
-
+throw std::exception();
     }
+    else {
+        return head->item;
     return ;
 }
 std::string Sequence::back(){

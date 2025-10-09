@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <memory>
-#include <vector>
 #include <string>
 
-class SequenceNode;
+//#include "SequenceNode.h"
+#include "SequenceNode.h"
 
 class Sequence {
 private:
@@ -27,10 +27,9 @@ public:
     std::string back() const;
     bool empty() const;
     size_t size() const;
-
-    static void clear();
+    void clear();
     void erase(size_t position);
     void erase(size_t position, size_t count);
     friend std::ostream &operator<<(std::ostream &os, const Sequence &s);
-}
+};
 #endif //PROJECT3_SEQUENCE_H
