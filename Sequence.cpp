@@ -6,9 +6,7 @@
 #include "Sequence.h"
 #include <iostream>
 #include <string>
-#include <vector>
-#include <stdexcept>
-#include <algorithm>
+#include <exception>
 #include <cassert>
 
 Sequence::Sequence(size_t sz) {
@@ -59,4 +57,11 @@ void Sequence::erase(size_t position, size_t count) {
 }
 friend std::ostream &operator<<(std::ostream &os, const Sequence &s) {
     return os;
+}
+Sequence::value_type& Sequence::operator[]( index_type position )
+{
+    if ( index position is invalid ) {
+        throw exception();
+    }
+    ...
 }
