@@ -2,13 +2,16 @@
 #define PROJECT3_SEQUENCE_H
 
 #include <iostream>
+#include <memory>
 #include <vector>
 #include <string>
 
+class SequenceNode;
+
 class Sequence {
 private:
-    std::shared_ptr<SequenceNode> head;
-    std::shared_ptr<SequenceNode> tail;
+    SequenceNode *head;
+    SequenceNode *tail;
     size_t numElts;
 
 public:
