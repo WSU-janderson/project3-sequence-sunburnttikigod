@@ -1,28 +1,24 @@
+// SequenceNode.cpp
+// Charlie Must
+// CS3100 Data Structures and Algorithms
+// Dr. James Anderson
+// Fall 2025
 //
-// Created by sunbu on 10/9/2025.
-//
-#include <string>
-#include <utility>
+// Implements the SequenceNode class used in the doubly-linked Sequence structure.
+// Each node stores a string item and pointers to adjacent nodes.
+// This file defines the constructors for node initialization.
 
-class SequenceNode {
-    SequenceNode *next;
-    SequenceNode *prev;
-    std::string item;
+#include "SequenceNode.h"
 
-    SequenceNode() : next(nullptr),
-                     prev(nullptr) {
-    }
+/**
+ * @brief Default constructor.
+ * Initializes item to empty string and pointers to nullptr.
+ */
+SequenceNode::SequenceNode() : item(""), next(nullptr), prev(nullptr) {}
 
-    SequenceNode(const std::string &item) : next(nullptr),
-                                     prev(nullptr),
-                                     item(item) {
-    }
-    ~SequenceNode() {}
-
-    SequenceNode& operator=(const SequenceNode& other) {
-        if (this != &other) {
-            this->item = other.item;
-        }
-        return *this;
-    }
-};
+/**
+ * @brief Parameterized constructor.
+ * @param item The string to store in the node.
+ * Initializes pointers to nullptr.
+ */
+SequenceNode::SequenceNode(const std::string& item) : item(item), next(nullptr), prev(nullptr) {}
