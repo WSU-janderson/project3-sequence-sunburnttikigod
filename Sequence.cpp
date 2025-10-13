@@ -15,7 +15,7 @@
  * @param sz Number of elements to initialize.
  * @post Sequence contains `sz` empty strings.
  */
-Sequence::Sequence(size_t sz) : numElts(0), head(nullptr), tail(nullptr) {
+Sequence::Sequence(size_t sz) : head(nullptr), tail(nullptr), numElts(0) {
     for (size_t i = 0; i < sz; i++) {
         push_back("");
     }
@@ -26,9 +26,9 @@ Sequence::Sequence(size_t sz) : numElts(0), head(nullptr), tail(nullptr) {
  * @param s Sequence to copy.
  * @post Creates a new Sequence with the same elements as `s`.
  */
-Sequence::Sequence(const Sequence &s) : numElts(0), head(nullptr), tail(nullptr) {
+Sequence::Sequence(const Sequence &s) : head(nullptr), tail(nullptr), numElts(0) {
     if (!s.empty()) {
-        SequenceNode* current = s.head;
+        const SequenceNode* current = s.head;
         while (current != nullptr) {
             push_back(current->item);
             current = current->next;
@@ -52,7 +52,7 @@ Sequence& Sequence::operator=(const Sequence& s) {
     if (this != &s) {
         clear();
         if (!s.empty()) {
-            SequenceNode* current = s.head;
+            const SequenceNode* current = s.head;
             while (current != nullptr) {
                 push_back(current->item);
                 current = current->next;
@@ -109,7 +109,7 @@ void Sequence::pop_back() {
         delete head;
         head = tail = nullptr;
     } else {
-        SequenceNode* oldTail = tail;
+        const SequenceNode* oldTail = tail;
         tail = tail->prev;
         tail->next = nullptr;
         delete oldTail;

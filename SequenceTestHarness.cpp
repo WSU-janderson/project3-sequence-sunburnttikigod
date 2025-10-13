@@ -21,14 +21,14 @@ using namespace std;
 // -----------------------------------------------------------------------------
 // Change this typedef to switch test type (int, double, std::string, etc.)
 // -----------------------------------------------------------------------------
-typedef std::string value_type;
+ typedef std::string value_type;
 // typedef int value_type;
 // typedef double value_type;
 
 // -----------------------------------------------------------------------------
 // Change this typedef to switch test type (int, double, std::string, etc.)
 // -----------------------------------------------------------------------------
-typedef std::string value_type;
+ typedef std::string value_type;
 // typedef int value_type;
 // typedef double value_type;
 
@@ -58,9 +58,9 @@ inline value_type make_value(int i) {
 
 // -----------------------------------------------------------------------------
 
-const std::string evalName{ "" };
+const std::string evalName{ "Charlie" };
 
-// #define __GRADING
+//#define __GRADING
 
 #define __CREATE_PRINT
 #define __INDEP
